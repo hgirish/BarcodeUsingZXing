@@ -22,7 +22,7 @@ namespace BarcodeUsingZXing
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Css/STyles.css"));
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using BarcodeUsingZXing.Models;
 using ZXing;
+using ZXing.Common;
 using ZXing.OneD;
 using ZXing.QrCode;
 
@@ -77,9 +78,29 @@ namespace BarcodeUsingZXing.Controllers
             return new FileContentResult(image, "image/jpeg");
         }
 
-        public ActionResult About()
+        public ActionResult About(string contents)
         {
             ViewBag.Message = "Your application description page.";
+            if (string.IsNullOrWhiteSpace(contents))
+            {
+                 contents = ViewBag.Message;
+            }
+            
+            contents = contents.ToUpper();
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.CODE_128,
+                //Options = new EncodingOptions { Height = 0,Width = 0}
+
+            };
+            var code39Writer = new Code39Writer();
+            var matrix = code39Writer.encode(contents, BarcodeFormat.CODE_39, 0, 50);
+            var result = new BarcodeWriter().Write(matrix);
+            ViewBag.ImageData = result.ToByteArray().ToImageData();
+
+          
+            //var bitmap = writer.Write(contents.ToUpper());
+            //ViewBag.ImageData = bitmap.ToByteArray().ToImageData();
 
             return View();
         }
