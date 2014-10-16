@@ -30,7 +30,7 @@ namespace BarcodeUsingZXing.Controllers
 
         public static byte[] GenerateBarcode(this string input)
         {
-            var imageSize = new Dimension(100, 100);
+            var imageSize = new Dimension(0, 0);
             var qrWrite = new QRCodeWriter();
             var matrix = qrWrite.encode(
                 input, BarcodeFormat.QR_CODE, imageSize.Width,

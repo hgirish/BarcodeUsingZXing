@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using BarcodeUsingZXing.Models;
@@ -13,7 +11,7 @@ namespace BarcodeUsingZXing.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly BarcodeContext db = new BarcodeContext();
+        private readonly BarcodeContext _db = new BarcodeContext();
 
 
         public ActionResult Index(string id)
@@ -23,7 +21,7 @@ namespace BarcodeUsingZXing.Controllers
             {
                 id = "ABCDEFGHIJKLMNOP";
             }
-            var entry = db.BarcodeEntries.FirstOrDefault(x => x.BarcodeText == id);
+            var entry = _db.BarcodeEntries.FirstOrDefault(x => x.BarcodeText == id);
             if (entry != null)
             {
                 image = entry.BarcodeBytes;
@@ -49,21 +47,11 @@ namespace BarcodeUsingZXing.Controllers
         {
             BarcodeEntry entry;
             entry = new BarcodeEntry {BarcodeBytes = image, BarcodeText = id, Created = DateTime.UtcNow};
-            db.BarcodeEntries.Add(entry);
-            db.SaveChanges();
+            _db.BarcodeEntries.Add(entry);
+            _db.SaveChanges();
         }
 
-        private static byte[] GenerateBarcode(string input)
-        {
-            var imageSize = new Dimension(100, 100);
-            var qrWrite = new QRCodeWriter();
-            var matrix = qrWrite.encode(
-                input, BarcodeFormat.QR_CODE, imageSize.Width, 
-                imageSize.Height);
-            var result = new BarcodeWriter().Write(matrix);
-            var image = result.ToByteArray();
-            return image;
-        }
+      
 
         public FileContentResult ImageGenerate(string s)
         {
@@ -75,21 +63,7 @@ namespace BarcodeUsingZXing.Controllers
             return new FileContentResult(image, "image/jpeg");
         }
 
-        //public void Encode()
-        //{
-        //    var writer = new BarcodeWriter
-        //                 {
-        //                     Format = BarcodeFormat.CODE_128,
-        //                     Options = new EncodingOptions
-        //                               {
-        //                                   Height = 0,
-        //                                   Width = 0,
-        //                                   Margin = 0
-        //                               }
-        //                 };
-        //    var image = writer.Write("ABCD");
-            
-        //}
+     
 
         public  FileContentResult CreateQrCodeImage(string toEncode)
         {
@@ -121,7 +95,7 @@ namespace BarcodeUsingZXing.Controllers
         {
             if (disposing)
             {
-                if (db != null) db.Dispose();
+                if (_db != null) _db.Dispose();
             }
             base.Dispose(disposing);
         }
