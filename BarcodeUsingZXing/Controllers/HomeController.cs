@@ -105,10 +105,25 @@ namespace BarcodeUsingZXing.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Contact(string contents)
         {
             ViewBag.Message = "Your contact page.";
+            if (string.IsNullOrWhiteSpace(contents))
+            {
+                contents = ViewBag.Message;
+            }
 
+            contents = contents.ToUpper();
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.CODE_128,
+                //Options = new EncodingOptions { Height = 0,Width = 0}
+
+            };
+            var code39Writer = new UPCAReader();
+            var matrix = code39Writer.encode(contents, BarcodeFormat.UPC_A, 0, 50);
+            var result = new BarcodeWriter().Write(matrix);
+            ViewBag.ImageData = result.ToByteArray().ToImageData();
             return View();
         }
 
