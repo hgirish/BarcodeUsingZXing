@@ -116,13 +116,13 @@ namespace BarcodeUsingZXing.Controllers
             contents = contents.ToUpper();
             var writer = new BarcodeWriter
             {
-                Format = BarcodeFormat.CODE_128,
+                Format = BarcodeFormat.UPC_A,
                 //Options = new EncodingOptions { Height = 0,Width = 0}
 
             };
-            var code39Writer = new UPCAReader();
-            var matrix = code39Writer.encode(contents, BarcodeFormat.UPC_A, 0, 50);
-            var result = new BarcodeWriter().Write(matrix);
+            var code39Writer = new BarcodeWriter();
+            var matrix = writer.Encode(contents);
+            var result =writer.Write(matrix);
             ViewBag.ImageData = result.ToByteArray().ToImageData();
             return View();
         }
